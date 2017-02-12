@@ -13,6 +13,7 @@ enum FwType {
 	SOFTDEVICE				= 1;
 	BOOTLOADER				= 2;
 	SOFTDEVICE_BOOTLOADER	= 3;
+	SOFTDEVICE_APPLICATION  = 4;
 }
 
 enum HashType {
