@@ -104,6 +104,9 @@ class TestPackage(unittest.TestCase):
         test_size(DFUType.SOFTDEVICE_BOOTLOADER, sd_size=SD_SIZE, app_size=APP_SIZE, bl_size=0, expect_failed=True)
         test_size(DFUType.SOFTDEVICE_BOOTLOADER, sd_size=SD_SIZE, app_size=APP_SIZE, bl_size=BL_SIZE,
                   expect_failed=False)
+        test_size(DFUType.SOFTDEVICE_APPLICATION, sd_size=0, app_size=APP_SIZE, bl_size=0, expect_failed=True)
+        test_size(DFUType.SOFTDEVICE_APPLICATION, sd_size=SD_SIZE, app_size=0, bl_size=0, expect_failed=True)
+        test_size(DFUType.SOFTDEVICE_APPLICATION, sd_size=SD_SIZE, app_size=APP_SIZE, bl_size=0, expect_failed=False)
 
     def test_init_packet(self):
         failed = False

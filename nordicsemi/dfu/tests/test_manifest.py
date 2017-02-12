@@ -60,6 +60,13 @@ class TestManifest(unittest.TestCase):
             FirmwareKeys.SD_SIZE: 90
         }
 
+        self.firmwares_data_a[HexType.SD_APP] = {
+            FirmwareKeys.BIN_FILENAME: "sd_app_fw.bin",
+            FirmwareKeys.DAT_FILENAME: "sd_app_fw.dat",
+            FirmwareKeys.APP_SIZE: 60,
+            FirmwareKeys.SD_SIZE: 100
+        }
+
         self.firmwares_data_b = {}
 
         self.firmwares_data_b[HexType.APPLICATION] = {
@@ -108,6 +115,15 @@ class TestManifest(unittest.TestCase):
         self.assertEqual("sd_bl_fw.bin", bl_sd['bin_file'])
         self.assertEqual("sd_bl_fw.dat", bl_sd['dat_file'])
 
+        # Test softdevice_application
+        bl_app = manifest['softdevice_application']
+        self.assertIsNotNone(bl_app)
+        self.assertEqual(100, bl_app['info_read_only_metadata']['sd_size'])
+        self.assertEqual(60, bl_app['info_read_only_metadata']['app_size'])
+
+        # Test for values in document
+        self.assertEqual("sd_app_fw.bin", bl_app['bin_file'])
+        self.assertEqual("sd_app_fw.dat", bl_app['dat_file'])
 
     def test_manifest_a(self):
         r = ManifestGenerator(self.firmwares_data_a)
@@ -123,6 +139,11 @@ class TestManifest(unittest.TestCase):
         self.assertEqual(50, m.softdevice_bootloader.info_read_only_metadata.bl_size)
         self.assertEqual("sd_bl_fw.bin", m.softdevice_bootloader.bin_file)
         self.assertEqual("sd_bl_fw.dat", m.softdevice_bootloader.dat_file)
+        self.assertIsNotNone(m.softdevice_application)
+        self.assertEqual(100, m.softdevice_application.info_read_only_metadata.sd_size)
+        self.assertEqual(60, m.softdevice_application.info_read_only_metadata.app_size)
+        self.assertEqual("sd_app_fw.bin", m.softdevice_application.bin_file)
+        self.assertEqual("sd_app_fw.dat", m.softdevice_application.dat_file)
 
     def test_manifest_b(self):
         r = ManifestGenerator(self.firmwares_data_b)
@@ -136,7 +157,7 @@ class TestManifest(unittest.TestCase):
         self.assertEqual("bootloader_fw.dat", m.bootloader.dat_file)
         self.assertIsNone(m.softdevice)
         self.assertIsNone(m.softdevice_bootloader)
-
+        self.assertIsNone(m.softdevice_application)
 
     def test_manifest_c(self):
         r = ManifestGenerator(self.firmwares_data_c)
@@ -148,6 +169,8 @@ class TestManifest(unittest.TestCase):
         self.assertEqual('softdevice_fw.bin', m.softdevice.bin_file)
         self.assertEqual('softdevice_fw.dat', m.softdevice.dat_file)
         self.assertIsNone(m.softdevice_bootloader)
+        self.assertIsNone(m.softdevice_application)
+
 
 if __name__ == '__main__':
     unittest.main()
