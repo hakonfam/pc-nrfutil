@@ -43,6 +43,7 @@ class HexType(Enum):
     BOOTLOADER = 2
     SD_BL = 3
     APPLICATION = 4
+    SD_APP = 5
 
 
 class FirmwareKeys(Enum):
@@ -53,3 +54,4 @@ class FirmwareKeys(Enum):
     INIT_PACKET_DATA = 5
     SD_SIZE = 6
     BL_SIZE = 7
+    APP_SIZE = 8
