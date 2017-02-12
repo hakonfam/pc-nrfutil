@@ -66,6 +66,11 @@ class ManifestGenerator(object):
                 _firmware.info_read_only_metadata = FWMetaData()
                 _firmware.info_read_only_metadata.bl_size = firmware_dict[FirmwareKeys.BL_SIZE]
                 _firmware.info_read_only_metadata.sd_size = firmware_dict[FirmwareKeys.SD_SIZE]
+            elif key == HexType.SD_APP:
+                _firmware = SoftdeviceApplicationFirmware()
+                _firmware.info_read_only_metadata = FWMetaData()
+                _firmware.info_read_only_metadata.app_size = firmware_dict[FirmwareKeys.APP_SIZE]
+                _firmware.info_read_only_metadata.sd_size = firmware_dict[FirmwareKeys.SD_SIZE]
             else:
                 _firmware = Firmware()
 
@@ -82,6 +87,8 @@ class ManifestGenerator(object):
                 self.manifest.softdevice = _firmware
             elif key == HexType.SD_BL:
                 self.manifest.softdevice_bootloader = _firmware
+            elif key == HexType.SD_APP:
+                self.manifest.softdevice_application = _firmware
             else:
                 raise NotImplementedException("Support for firmware type {0} not implemented yet.".format(key))
 
@@ -107,7 +114,8 @@ class FWMetaData(object):
                  fw_version=None,
                  softdevice_req=None,
                  sd_size=None,
-                 bl_size=None
+                 bl_size=None,
+                 app_size=None
                  ):
         """
         The FWMetaData data model.
@@ -118,6 +126,7 @@ class FWMetaData(object):
         :param list softdevice_req: softdevice requirements
         :param int sd_size SoftDevice size
         :param int bl_size Bootloader size
+        :param int app_size Application size
         :return:FWMetaData 
         """
         self.is_debug = is_debug
@@ -126,6 +135,7 @@ class FWMetaData(object):
         self.softdevice_req = softdevice_req
         self.sd_size = sd_size
         self.bl_size = bl_size
+        self.app_size = app_size
 
 
 class Firmware(object):
@@ -148,6 +158,25 @@ class Firmware(object):
             self.info_read_only_metadata = FWMetaData(**info_read_only_metadata)
         else:
             self.info_read_only_metadata = None
+
+
+class SoftdeviceApplicationFirmware(Firmware):
+    def __init__(self,
+                 bin_file=None,
+                 dat_file=None,
+                 info_read_only_metadata=None):
+        """
+        The SoftdeviceApplicationFirmware data model
+
+        :param str bin_file: Firmware binary file
+        :param str dat_file: Firmware .dat file (init packet for Nordic DFU)
+        :param int info_read_only_metadata: The metadata about this firmware image
+        :return: SoftdeviceApplicationFirmware
+        """
+        super(SoftdeviceApplicationFirmware, self).__init__(
+            bin_file,
+            dat_file,
+            info_read_only_metadata)
 
 
 class SoftdeviceBootloaderFirmware(Firmware):
@@ -173,7 +202,8 @@ class Manifest:
                  application=None,
                  bootloader=None,
                  softdevice=None,
-                 softdevice_bootloader=None):
+                 softdevice_bootloader=None,
+                 softdevice_application=None):
         """
         The Manifest data model.
 
@@ -181,10 +211,14 @@ class Manifest:
         :param dict bootloader: Bootloader firmware in package
         :param dict softdevice: Softdevice firmware in package
         :param dict softdevice_bootloader: Combined softdevice and bootloader firmware in package
+        :param dict softdevice_application: Combined softdevice and application firmware in package
         :return: Manifest
         """
         self.softdevice_bootloader = \
             SoftdeviceBootloaderFirmware(**softdevice_bootloader) if softdevice_bootloader else None
+
+        self.softdevice_application = \
+            SoftdeviceApplicationFirmware(**softdevice_application) if softdevice_application else None
 
         self.softdevice = Firmware(**softdevice) if softdevice else None
         self.bootloader = Firmware(**bootloader) if bootloader else None

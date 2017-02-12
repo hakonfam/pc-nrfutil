@@ -58,6 +58,7 @@ class DFUType(Enum):
     SOFTDEVICE = pb.SOFTDEVICE
     BOOTLOADER = pb.BOOTLOADER
     SOFTDEVICE_BOOTLOADER = pb.SOFTDEVICE_BOOTLOADER
+    SOFTDEVICE_APPLICATION = pb.SOFTDEVICE_APPLICATION
 
 
 class InitPacketPB(object):
@@ -113,6 +114,10 @@ class InitPacketPB(object):
                 (self.init_command.sd_size == 0 or self.init_command.bl_size == 0):
             raise RuntimeError("Either sd_size or bl_size is not set. Both must be set when type "
                                "is SOFTDEVICE_BOOTLOADER")
+        elif self.init_command.type == pb.SOFTDEVICE_APPLICATION and \
+                (self.init_command.sd_size == 0 or self.init_command.app_size == 0):
+            raise RuntimeError("Either sd_size or app_size is not set. Both must be set when type "
+                               "is SOFTDEVICE_APPLICATION")
 
         if self.init_command.fw_version < 0 or self.init_command.fw_version > 0xffffffff or \
            self.init_command.hw_version < 0 or self.init_command.hw_version > 0xffffffff:

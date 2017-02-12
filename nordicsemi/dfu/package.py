@@ -61,7 +61,8 @@ HexTypeToInitPacketFwTypemap = {
     HexType.APPLICATION: DFUType.APPLICATION,
     HexType.BOOTLOADER: DFUType.BOOTLOADER,
     HexType.SOFTDEVICE: DFUType.SOFTDEVICE,
-    HexType.SD_BL: DFUType.SOFTDEVICE_BOOTLOADER
+    HexType.SD_BL: DFUType.SOFTDEVICE_BOOTLOADER,
+    HexType.SD_APP: DFUType.SOFTDEVICE_APPLICATION,
 }
 
 
@@ -200,7 +201,8 @@ class Package(object):
         type_strs = {HexType.SD_BL : "sd_bl", 
                     HexType.SOFTDEVICE : "softdevice",
                     HexType.BOOTLOADER : "bootloader",
-                    HexType.APPLICATION : "application" }
+                    HexType.APPLICATION : "application",
+                    HexType.SD_APP : "sd_app"}
 
         # parse init packet
         with open(os.path.join(self.zip_dir, img.dat_file), "rb") as imgf:
@@ -267,6 +269,10 @@ class Package(object):
             imgs = imgs + self.image_str(i, HexType.SD_BL, self.manifest.softdevice_bootloader)
             i = i + 1
 
+        if self.manifest.softdevice_application:
+            imgs = imgs + self.image_str(i, HexType.SD_APP, self.manifest.softdevice_application)
+            i = i + 1
+
         if self.manifest.softdevice:
             imgs = imgs + self.image_str(i, HexType.SOFTDEVICE, self.manifest.softdevice)
             i = i + 1
@@ -313,7 +319,7 @@ DFU Package: <{0}>:
             new_filename = "sd_bl.bin"
             sd_bl_file_path = os.path.join(self.work_dir, new_filename)
 
-            nrf_hex = nRFHex(softdevice_fw_name, bootloader_fw_name)
+            nrf_hex = nRFHex(softdevice_fw_name, bootloader=bootloader_fw_name)
             nrf_hex.tobinfile(sd_bl_file_path)
 
             softdevice_size = nrf_hex.size()
@@ -325,6 +331,31 @@ DFU Package: <{0}>:
                                      init_packet_data=softdevice_fw_data[FirmwareKeys.INIT_PACKET_DATA],
                                      sd_size=softdevice_size,
                                      bl_size=bootloader_size)
+
+        elif Package._is_application_softdevice_combination:
+            # Removing softdevice and bootloader data from dictionary and adding the combined later
+            softdevice_fw_data = self.firmwares_data.pop(HexType.SOFTDEVICE)
+            application_fw_data = self.firmwares_data.pop(HexType.APPLICATION)
+
+            softdevice_fw_name = softdevice_fw_data[FirmwareKeys.FIRMWARE_FILENAME]
+            application_fw_name = application_fw_data[FirmwareKeys.FIRMWARE_FILENAME]
+
+            new_filename = "sd_app.bin"
+            sd_app_file_path = os.path.join(self.work_dir, new_filename)
+
+            nrf_hex = nRFHex(softdevice_fw_name, application=application_fw_name)
+            nrf_hex.tobinfile(sd_app_file_path)
+
+            softdevice_size = nrf_hex.size()
+            application_size = nrf_hex.applicationsize()
+
+            self.__add_firmware_info(firmware_type=HexType.SD_APP,
+                                     firmware_version=application_fw_data[FirmwareKeys.INIT_PACKET_DATA][PacketField.FW_VERSION],  # use application version in combination with SD
+                                     filename=sd_app_file_path,
+                                     init_packet_data=softdevice_fw_data[FirmwareKeys.INIT_PACKET_DATA],
+                                     sd_size=softdevice_size,
+                                     app_size=application_size)
+
 
         for key, firmware_data in self.firmwares_data.iteritems():
 
@@ -348,6 +379,9 @@ DFU Package: <{0}>:
                 bl_size = bin_length
             elif key == HexType.SD_BL:
                 bl_size = firmware_data[FirmwareKeys.BL_SIZE]
+                sd_size = firmware_data[FirmwareKeys.SD_SIZE]
+            elif key == HexType.SD_APP:
+                app_size = firmware_data[FirmwareKeys.APP_SIZE]
                 sd_size = firmware_data[FirmwareKeys.SD_SIZE]
 
             init_packet = InitPacketPB(
@@ -459,7 +493,11 @@ DFU Package: <{0}>:
     def _is_bootloader_softdevice_combination(firmwares):
         return (HexType.BOOTLOADER in firmwares) and (HexType.SOFTDEVICE in firmwares)
 
-    def __add_firmware_info(self, firmware_type, firmware_version, filename, init_packet_data, sd_size=None, bl_size=None):
+    @staticmethod
+    def _is_application_softdevice_combination(firmwares):
+        return (HexType.APPLICATION in firmwares) and (HexType.SOFTDEVICE in firmwares)
+
+    def __add_firmware_info(self, firmware_type, firmware_version, filename, init_packet_data, sd_size=None, bl_size=None, app_size=None):
         self.firmwares_data[firmware_type] = {
             FirmwareKeys.FIRMWARE_FILENAME: filename,
             FirmwareKeys.INIT_PACKET_DATA: init_packet_data.copy(),
@@ -469,6 +507,10 @@ DFU Package: <{0}>:
         if firmware_type == HexType.SD_BL:
             self.firmwares_data[firmware_type][FirmwareKeys.SD_SIZE] = sd_size
             self.firmwares_data[firmware_type][FirmwareKeys.BL_SIZE] = bl_size
+
+        elif firmware_type == HexType.SD_APP:
+            self.firmwares_data[firmware_type][FirmwareKeys.SD_SIZE] = sd_size
+            self.firmwares_data[firmware_type][FirmwareKeys.APP_SIZE] = app_size
         
         if firmware_version is not None:
             self.firmwares_data[firmware_type][FirmwareKeys.INIT_PACKET_DATA][PacketField.FW_VERSION] = firmware_version
