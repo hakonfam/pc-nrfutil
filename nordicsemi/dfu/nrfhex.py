@@ -57,13 +57,14 @@ class nRFHex(intelhex.IntelHex):
     s1x0_mbr_end_address = 0x1000
     s132_mbr_end_address = 0x3000
 
-    def __init__(self, source, bootloader=None, arch=None):
+    def __init__(self, source, bootloader=None, application=None, arch=None):
         """
         Constructor that requires a firmware file path.
-        Softdevices can take an optional bootloader file path as parameter.
+        Softdevices can take an optional bootloader or application file path as parameter.
 
         :param str source: The file path for the firmware
         :param str bootloader: Optional file path to bootloader firmware
+        :param str application: Optional file path to application firmware
         :return: None
         """
         super(nRFHex, self).__init__()
@@ -77,6 +78,11 @@ class nRFHex(intelhex.IntelHex):
         self.loadfile(source, self.file_format)
 
         self._removeuicr()
+
+        self.applicationhex = None
+
+        if application is not None:
+            self.applicationhex = nRFHex(application)
 
         self.bootloaderhex = None
 
@@ -158,6 +164,17 @@ class nRFHex(intelhex.IntelHex):
             return 0
 
         return self.bootloaderhex.size()
+
+
+    def applicationsize(self):
+        """
+        Returns the size of the application.
+        :return: int
+        """
+        if self.applicationhex is None:
+            return 0
+
+        return self.applicationhex.size()
 
     def tobinfile(self, fobj, start=None, end=None, pad=None, size=None):
         """
