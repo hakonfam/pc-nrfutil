@@ -178,13 +178,13 @@ class nRFHex(intelhex.IntelHex):
 
     def tobinfile(self, fobj, start=None, end=None, pad=None, size=None):
         """
-        Writes a binary version of source and bootloader respectivly to fobj which could be a
+        Writes a binary version of source and (bootloader or application) respectively to fobj which could be a
         file object or a file path.
 
         :param str fobj: File path or object the function writes to
         :return: None
         """
-        # If there is a bootloader this will make the recursion call use the samme file object.
+        # If there is a bootloader this will make the recursion call use the same file object.
         if getattr(fobj, "write", None) is None:
             fobj = open(fobj, "wb")
             close_fd = True
@@ -197,6 +197,9 @@ class nRFHex(intelhex.IntelHex):
 
         if self.bootloaderhex is not None:
             self.bootloaderhex.tobinfile(fobj)
+
+        elif self.applicationhex is not None:
+            self.applicationhex.tobinfile(fobj)
 
         if close_fd:
             fobj.close()
