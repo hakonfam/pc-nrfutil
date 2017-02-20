@@ -109,6 +109,10 @@ class Dfu(object):
             logger.info("Sending SoftDevice+Bootloader image.")
             self._dfu_send_image(self.manifest.softdevice_bootloader)
 
+        if self.manifest.softdevice_application:
+            logger.info("Sending SoftDevice+Application image.")
+            self._dfu_send_image(self.manifest.softdevice_application)
+
         if self.manifest.softdevice:
             logger.info("Sending SoftDevice image...")
             self._dfu_send_image(self.manifest.softdevice)

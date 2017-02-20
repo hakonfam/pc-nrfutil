@@ -88,10 +88,7 @@ class ManifestGenerator(object):
             elif key == HexType.SD_BL:
                 self.manifest.softdevice_bootloader = _firmware
             elif key == HexType.SD_APP:
-                # TODO: This is a hack so that the DFU controller does not need to be updated.
-                # TODO: The actual code should be:
-                # TODO: self.manifest.softdevice_application = _firmware
-                self.manifest.application = _firmware
+                self.manifest.softdevice_application = _firmware
             else:
                 raise NotImplementedException("Support for firmware type {0} not implemented yet.".format(key))
 
