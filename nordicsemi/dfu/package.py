@@ -332,7 +332,7 @@ DFU Package: <{0}>:
                                      sd_size=softdevice_size,
                                      bl_size=bootloader_size)
 
-        elif Package._is_application_softdevice_combination:
+        elif Package._is_application_softdevice_combination(self.firmwares_data):
             # Removing softdevice and bootloader data from dictionary and adding the combined later
             softdevice_fw_data = self.firmwares_data.pop(HexType.SOFTDEVICE)
             application_fw_data = self.firmwares_data.pop(HexType.APPLICATION)
