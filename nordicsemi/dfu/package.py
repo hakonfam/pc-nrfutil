@@ -376,6 +376,7 @@ DFU Package: <{0}>:
             sd_size = 0
             bl_size = 0
             app_size = 0
+            app_addr = 0
             if key == HexType.APPLICATION:
                 app_size = bin_length
             elif key == HexType.SOFTDEVICE:
@@ -388,6 +389,7 @@ DFU Package: <{0}>:
             elif key == HexType.SD_APP:
                 app_size = firmware_data[FirmwareKeys.APP_SIZE]
                 sd_size = firmware_data[FirmwareKeys.SD_SIZE]
+                app_addr = firmware_data[FirmwareKeys.APP_ADDR]
 
             init_packet = InitPacketPB(
                             from_bytes=None,
@@ -399,7 +401,7 @@ DFU Package: <{0}>:
                             hw_version=firmware_data[FirmwareKeys.INIT_PACKET_DATA][PacketField.HW_VERSION],
                             sd_size=sd_size,
                             app_size=app_size,
-                            app_addr=application_address,
+                            app_addr=app_addr,
                             bl_size=bl_size,
                             sd_req=firmware_data[FirmwareKeys.INIT_PACKET_DATA][PacketField.REQUIRED_SOFTDEVICES_ARRAY])
 
