@@ -55,3 +55,4 @@ class FirmwareKeys(Enum):
     SD_SIZE = 6
     BL_SIZE = 7
     APP_SIZE = 8
+    APP_ADDR = 9

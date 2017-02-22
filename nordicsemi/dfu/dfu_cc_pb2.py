@@ -55,7 +55,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='dfu-cc.proto',
   package='dfu',
-  serialized_pb=_b('\n\x0c\x64\x66u-cc.proto\x12\x03\x64\x66u\"6\n\x04Hash\x12 \n\thash_type\x18\x01 \x02(\x0e\x32\r.dfu.HashType\x12\x0c\n\x04hash\x18\x02 \x02(\x0c\"\xca\x01\n\x0bInitCommand\x12\x12\n\nfw_version\x18\x01 \x01(\r\x12\x12\n\nhw_version\x18\x02 \x01(\r\x12\x12\n\x06sd_req\x18\x03 \x03(\rB\x02\x10\x01\x12\x19\n\x04type\x18\x04 \x01(\x0e\x32\x0b.dfu.FwType\x12\x0f\n\x07sd_size\x18\x05 \x01(\r\x12\x0f\n\x07\x62l_size\x18\x06 \x01(\r\x12\x10\n\x08\x61pp_size\x18\x07 \x01(\r\x12\x17\n\x04hash\x18\x08 \x01(\x0b\x32\t.dfu.Hash\x12\x17\n\x08is_debug\x18\t \x01(\x08:\x05\x66\x61lse\"\x1f\n\x0cResetCommand\x12\x0f\n\x07timeout\x18\x01 \x02(\r\"i\n\x07\x43ommand\x12\x1c\n\x07op_code\x18\x01 \x01(\x0e\x32\x0b.dfu.OpCode\x12\x1e\n\x04init\x18\x02 \x01(\x0b\x32\x10.dfu.InitCommand\x12 \n\x05reset\x18\x03 \x01(\x0b\x32\x11.dfu.ResetCommand\"m\n\rSignedCommand\x12\x1d\n\x07\x63ommand\x18\x01 \x02(\x0b\x32\x0c.dfu.Command\x12*\n\x0esignature_type\x18\x02 \x02(\x0e\x32\x12.dfu.SignatureType\x12\x11\n\tsignature\x18\x03 \x02(\x0c\"S\n\x06Packet\x12\x1d\n\x07\x63ommand\x18\x01 \x01(\x0b\x32\x0c.dfu.Command\x12*\n\x0esigned_command\x18\x02 \x01(\x0b\x32\x12.dfu.SignedCommand*\x1d\n\x06OpCode\x12\t\n\x05RESET\x10\x00\x12\x08\n\x04INIT\x10\x01*p\n\x06\x46wType\x12\x0f\n\x0b\x41PPLICATION\x10\x00\x12\x0e\n\nSOFTDEVICE\x10\x01\x12\x0e\n\nBOOTLOADER\x10\x02\x12\x19\n\x15SOFTDEVICE_BOOTLOADER\x10\x03\x12\x1a\n\x16SOFTDEVICE_APPLICATION\x10\x04*D\n\x08HashType\x12\x0b\n\x07NO_HASH\x10\x00\x12\x07\n\x03\x43RC\x10\x01\x12\n\n\x06SHA128\x10\x02\x12\n\n\x06SHA256\x10\x03\x12\n\n\x06SHA512\x10\x04*3\n\rSignatureType\x12\x15\n\x11\x45\x43\x44SA_P256_SHA256\x10\x00\x12\x0b\n\x07\x45\x44\x32\x35\x35\x31\x39\x10\x01')
+  serialized_pb=_b('\n\x0c\x64\x66u-cc.proto\x12\x03\x64\x66u\"6\n\x04Hash\x12 \n\thash_type\x18\x01 \x02(\x0e\x32\r.dfu.HashType\x12\x0c\n\x04hash\x18\x02 \x02(\x0c\"\xdc\x01\n\x0bInitCommand\x12\x12\n\nfw_version\x18\x01 \x01(\r\x12\x12\n\nhw_version\x18\x02 \x01(\r\x12\x12\n\x06sd_req\x18\x03 \x03(\rB\x02\x10\x01\x12\x19\n\x04type\x18\x04 \x01(\x0e\x32\x0b.dfu.FwType\x12\x0f\n\x07sd_size\x18\x05 \x01(\r\x12\x0f\n\x07\x62l_size\x18\x06 \x01(\r\x12\x10\n\x08\x61pp_size\x18\x07 \x01(\r\x12\x17\n\x04hash\x18\x08 \x01(\x0b\x32\t.dfu.Hash\x12\x17\n\x08is_debug\x18\t \x01(\x08:\x05\x66\x61lse\x12\x10\n\x08\x61pp_addr\x18\n \x01(\r\"\x1f\n\x0cResetCommand\x12\x0f\n\x07timeout\x18\x01 \x02(\r\"i\n\x07\x43ommand\x12\x1c\n\x07op_code\x18\x01 \x01(\x0e\x32\x0b.dfu.OpCode\x12\x1e\n\x04init\x18\x02 \x01(\x0b\x32\x10.dfu.InitCommand\x12 \n\x05reset\x18\x03 \x01(\x0b\x32\x11.dfu.ResetCommand\"m\n\rSignedCommand\x12\x1d\n\x07\x63ommand\x18\x01 \x02(\x0b\x32\x0c.dfu.Command\x12*\n\x0esignature_type\x18\x02 \x02(\x0e\x32\x12.dfu.SignatureType\x12\x11\n\tsignature\x18\x03 \x02(\x0c\"S\n\x06Packet\x12\x1d\n\x07\x63ommand\x18\x01 \x01(\x0b\x32\x0c.dfu.Command\x12*\n\x0esigned_command\x18\x02 \x01(\x0b\x32\x12.dfu.SignedCommand*\x1d\n\x06OpCode\x12\t\n\x05RESET\x10\x00\x12\x08\n\x04INIT\x10\x01*p\n\x06\x46wType\x12\x0f\n\x0b\x41PPLICATION\x10\x00\x12\x0e\n\nSOFTDEVICE\x10\x01\x12\x0e\n\nBOOTLOADER\x10\x02\x12\x19\n\x15SOFTDEVICE_BOOTLOADER\x10\x03\x12\x1a\n\x16SOFTDEVICE_APPLICATION\x10\x04*D\n\x08HashType\x12\x0b\n\x07NO_HASH\x10\x00\x12\x07\n\x03\x43RC\x10\x01\x12\n\n\x06SHA128\x10\x02\x12\n\n\x06SHA256\x10\x03\x12\n\n\x06SHA512\x10\x04*3\n\rSignatureType\x12\x15\n\x11\x45\x43\x44SA_P256_SHA256\x10\x00\x12\x0b\n\x07\x45\x44\x32\x35\x35\x31\x39\x10\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -76,8 +76,8 @@ _OPCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=618,
-  serialized_end=647,
+  serialized_start=636,
+  serialized_end=665,
 )
 _sym_db.RegisterEnumDescriptor(_OPCODE)
 
@@ -111,8 +111,8 @@ _FWTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=649,
-  serialized_end=761,
+  serialized_start=667,
+  serialized_end=779,
 )
 _sym_db.RegisterEnumDescriptor(_FWTYPE)
 
@@ -146,8 +146,8 @@ _HASHTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=763,
-  serialized_end=831,
+  serialized_start=781,
+  serialized_end=849,
 )
 _sym_db.RegisterEnumDescriptor(_HASHTYPE)
 
@@ -169,8 +169,8 @@ _SIGNATURETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=833,
-  serialized_end=884,
+  serialized_start=851,
+  serialized_end=902,
 )
 _sym_db.RegisterEnumDescriptor(_SIGNATURETYPE)
 
@@ -299,6 +299,13 @@ _INITCOMMAND = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='app_addr', full_name='dfu.InitCommand.app_addr', index=9,
+      number=10, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -311,7 +318,7 @@ _INITCOMMAND = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=78,
-  serialized_end=280,
+  serialized_end=298,
 )
 
 
@@ -340,8 +347,8 @@ _RESETCOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=282,
-  serialized_end=313,
+  serialized_start=300,
+  serialized_end=331,
 )
 
 
@@ -384,8 +391,8 @@ _COMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=315,
-  serialized_end=420,
+  serialized_start=333,
+  serialized_end=438,
 )
 
 
@@ -428,8 +435,8 @@ _SIGNEDCOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=422,
-  serialized_end=531,
+  serialized_start=440,
+  serialized_end=549,
 )
 
 
@@ -465,8 +472,8 @@ _PACKET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=533,
-  serialized_end=616,
+  serialized_start=551,
+  serialized_end=634,
 )
 
 _HASH.fields_by_name['hash_type'].enum_type = _HASHTYPE

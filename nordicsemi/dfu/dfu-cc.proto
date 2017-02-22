@@ -44,6 +44,7 @@ message InitCommand {
 	optional Hash	hash		= 8;
     
     optional bool   is_debug    = 9 [default = false];
+    optional uint32 app_addr    = 10;
 }
 
 message ResetCommand

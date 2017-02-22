@@ -73,7 +73,8 @@ class InitPacketPB(object):
                  sd_size=0,
                  app_size=0,
                  bl_size=0,
-                 sd_req=None
+                 sd_req=None,
+                 app_addr=0,
                  ):
 
         if from_bytes is not None:
@@ -99,6 +100,7 @@ class InitPacketPB(object):
             self.init_command.sd_size = sd_size
             self.init_command.bl_size = bl_size
             self.init_command.app_size = app_size
+            self.init_command.app_addr = app_addr
             self.signed_command.command.op_code = pb.INIT
 
         self._validate()
@@ -115,8 +117,8 @@ class InitPacketPB(object):
             raise RuntimeError("Either sd_size or bl_size is not set. Both must be set when type "
                                "is SOFTDEVICE_BOOTLOADER")
         elif self.init_command.type == pb.SOFTDEVICE_APPLICATION and \
-                (self.init_command.sd_size == 0 or self.init_command.app_size == 0):
-            raise RuntimeError("Either sd_size or app_size is not set. Both must be set when type "
+                (self.init_command.sd_size == 0 or self.init_command.app_size == 0 or self.init_command.app_addr == 0):
+            raise RuntimeError("Either sd_size, app_size or app_addr is not set. Both must be set when type "
                                "is SOFTDEVICE_APPLICATION")
 
         if self.init_command.fw_version < 0 or self.init_command.fw_version > 0xffffffff or \

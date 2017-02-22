@@ -117,6 +117,7 @@ class Package(object):
                  bl_version=DEFAULT_BL_VERSION,
                  sd_req=DEFAULT_SD_REQ,
                  app_fw=None,
+                 app_addr=None,
                  bootloader_fw=None,
                  softdevice_fw=None,
                  key_file=None):
@@ -151,7 +152,8 @@ class Package(object):
             self.__add_firmware_info(firmware_type=HexType.APPLICATION,
                                      firmware_version=app_version,
                                      filename=app_fw,
-                                     init_packet_data=init_packet_vars)
+                                     init_packet_data=init_packet_vars,
+                                     app_addr=app_addr)
 
         if bootloader_fw:
             self.__add_firmware_info(firmware_type=HexType.BOOTLOADER,
@@ -340,6 +342,8 @@ DFU Package: <{0}>:
             softdevice_fw_name = softdevice_fw_data[FirmwareKeys.FIRMWARE_FILENAME]
             application_fw_name = application_fw_data[FirmwareKeys.FIRMWARE_FILENAME]
 
+            application_address = application_fw_data[FirmwareKeys.APP_ADDR]
+
             new_filename = "sd_app.bin"
             sd_app_file_path = os.path.join(self.work_dir, new_filename)
 
@@ -354,7 +358,8 @@ DFU Package: <{0}>:
                                      filename=sd_app_file_path,
                                      init_packet_data=softdevice_fw_data[FirmwareKeys.INIT_PACKET_DATA],
                                      sd_size=softdevice_size,
-                                     app_size=application_size)
+                                     app_size=application_size,
+                                     app_addr=application_address)
 
 
         for key, firmware_data in self.firmwares_data.iteritems():
@@ -385,7 +390,7 @@ DFU Package: <{0}>:
                 sd_size = firmware_data[FirmwareKeys.SD_SIZE]
 
             init_packet = InitPacketPB(
-                            from_bytes = None,
+                            from_bytes=None,
                             hash_bytes=firmware_hash,
                             hash_type=HashTypes.SHA256,
                             dfu_type=HexTypeToInitPacketFwTypemap[key],
@@ -394,6 +399,7 @@ DFU Package: <{0}>:
                             hw_version=firmware_data[FirmwareKeys.INIT_PACKET_DATA][PacketField.HW_VERSION],
                             sd_size=sd_size,
                             app_size=app_size,
+                            app_addr=application_address,
                             bl_size=bl_size,
                             sd_req=firmware_data[FirmwareKeys.INIT_PACKET_DATA][PacketField.REQUIRED_SOFTDEVICES_ARRAY])
 
@@ -497,7 +503,7 @@ DFU Package: <{0}>:
     def _is_application_softdevice_combination(firmwares):
         return (HexType.APPLICATION in firmwares) and (HexType.SOFTDEVICE in firmwares)
 
-    def __add_firmware_info(self, firmware_type, firmware_version, filename, init_packet_data, sd_size=None, bl_size=None, app_size=None):
+    def __add_firmware_info(self, firmware_type, firmware_version, filename, init_packet_data, sd_size=None, bl_size=None, app_size=None, app_addr=None):
         self.firmwares_data[firmware_type] = {
             FirmwareKeys.FIRMWARE_FILENAME: filename,
             FirmwareKeys.INIT_PACKET_DATA: init_packet_data.copy(),
@@ -514,6 +520,9 @@ DFU Package: <{0}>:
         
         if firmware_version is not None:
             self.firmwares_data[firmware_type][FirmwareKeys.INIT_PACKET_DATA][PacketField.FW_VERSION] = firmware_version
+
+        if app_addr is not None:
+            self.firmwares_data[firmware_type][FirmwareKeys.APP_ADDR] = app_addr
 
     @staticmethod
     def normalize_firmware_to_bin(work_dir, firmware_path):

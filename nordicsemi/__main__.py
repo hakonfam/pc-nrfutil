@@ -349,6 +349,9 @@ def pkg():
 @click.option('--application',
               help='The application firmware file.',
               type=click.STRING)
+@click.option('--application-address',
+              help='The application start address.',
+              type=BASED_INT_OR_NONE)
 @click.option('--application-version',
               help='The application version.',
               type=BASED_INT_OR_NONE)
@@ -387,6 +390,7 @@ def pkg():
 def generate(zipfile,
            debug_mode,
            application,
+           application_address,
            application_version,
            application_version_string,
            bootloader,
@@ -516,6 +520,7 @@ def generate(zipfile,
                       bootloader_version,
                       sd_req_list,
                       application,
+                      application_address,
                       bootloader,
                       softdevice,
                       key_file)
