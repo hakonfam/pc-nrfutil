@@ -52,6 +52,8 @@ from nordicsemi.dfu.package import Package
 from nordicsemi import version as nrfutil_version
 from nordicsemi.dfu.signing import Signing
 from nordicsemi.dfu.util import query_func
+from dfu.script_builder import bl_script
+from intelhex import IntelHex
 from pc_ble_driver_py.exceptions import NordicSemiException, NotImplementedException
 
 logger = logging.getLogger(__name__)
@@ -158,6 +160,50 @@ def version():
     click.echo("nrfutil version {}".format(nrfutil_version.NRFUTIL_VERSION))
     logger.info("PyPi URL: https://pypi.python.org/pypi/nrfutil")
     logger.debug("GitHub URL: https://github.com/NordicSemiconductor/pc-nrfutil")
+
+
+@cli.group(short_help='Generate default script for use with nRF Mini Bootloader.')
+def default_script():
+    """
+    This set of commands supports Nordic DFU package generation.
+    """
+    pass
+
+@default_script.command(short_help='Create default script hex file.')
+
+@click.option('--ds-address',
+              help='The address of the default scripts.',
+              required=True,
+              type=BASED_INT_OR_NONE)
+@click.option('--app-address',
+              help='The start address of the application.',
+              required=True,
+              type=BASED_INT_OR_NONE)
+@click.option('--script-file',
+                required=True,
+                type=click.Path())
+def create(ds_address,
+           app_address,
+           script_file):
+    bl_scr = bl_script(1)
+    bl_scr.cmd_app_handshake()
+    bl_scr.cmd_sd_init(app_address)
+    bl_scr.cmd_exec(app_address)
+    scrdata = bl_scr.get()
+    scrdata = bl_script.page_start(scrdata)
+    scrdata = bl_script.page_stop(scrdata)
+
+    ih = IntelHex()
+
+    for i in range(len(scrdata)):
+        ih[ds_address + i] = scrdata[i]
+
+    with open(script_file, 'w') as out_file:
+        ih.write_hex_file(out_file)
+
+    click.echo("Created default page hex file %s with address: %s and app start address %s " %
+               (script_file, hex(ds_address), hex(app_address)))
+
 
 @cli.group(short_help='Generate and display Bootloader DFU settings.')
 def settings():
