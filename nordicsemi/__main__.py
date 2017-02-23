@@ -52,7 +52,7 @@ from nordicsemi.dfu.package import Package
 from nordicsemi import version as nrfutil_version
 from nordicsemi.dfu.signing import Signing
 from nordicsemi.dfu.util import query_func
-from nordicsemi.bluetooth.script_builder import bl_script
+from nordicsemi.dfu.script_builder import bl_script
 from intelhex import IntelHex
 from pc_ble_driver_py.exceptions import NordicSemiException, NotImplementedException
 
